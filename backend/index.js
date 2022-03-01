@@ -1,10 +1,15 @@
 const express = require('express');
 const WebSocket = require('ws');
+const mysql = require('mysql');
+
+const dbconnection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'qwe123',
+    database: 'nodetok'
+});
 
 const app = express();
-app.use("/", (req, res) => {
-    res.sendFile(__dirname + '/index.html')
-});
 
 app.listen(8080);
 

@@ -7,8 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>톡</h1>
-    <button id="send" onclick="socket.send('ㅎㅇ')">메세지 보내기</button>
+    <h1>NODETOK</h1>
+    <input type="text" id="text">
+    <button id="send" onclick="socket.send(document.getElementById('text').value)">메세지 보내기</button>
     <script>
         let socket = new WebSocket("ws://localhost:8081");
     </script>
