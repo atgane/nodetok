@@ -39,6 +39,7 @@ const app = express();
 app.use(express.json());
 
 app.post('/user/account/signin', (req, res) => {
+	console.log(req.body)
 	database.query('SELECT * FROM user WHERE id=?', [req.body.id])
 		.then(rows => {
 			console.log(rows)

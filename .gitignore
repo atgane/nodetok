@@ -1,1 +1,7 @@
 /backend/node_modules
+/backend/index.rest
+
+/frontend/node_modules
+
+/nodetok.session.sql
+/legacy
