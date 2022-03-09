@@ -11,18 +11,18 @@ const Signup = () => {
 		const options = {
 			method: 'POST',
 			mode: 'cors',
-			headers: new Headers({'content-type': 'application/json'}),
-			body: JSON.stringify({id: ID, password: password})
+			headers: new Headers({ 'content-type': 'application/json' }),
+			body: JSON.stringify({ id: ID, password: password })
 		}
 		console.log(ID, password)
 		fetch('user/account/signup', options)
-		.then(res => res.text())
-		.then(text => {
-			if (text === 'existing id') alert('id existed');
-			else {
-				navigate('/signin');
-			}
-		})
+			.then(res => res.text())
+			.then(text => {
+				if (text === 'existing id') alert('id existed');
+				else {
+					navigate('/signin');
+				}
+			})
 	};
 
 	return (

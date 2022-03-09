@@ -11,19 +11,19 @@ const Signin = () => {
 		const options = {
 			method: 'POST',
 			mode: 'cors',
-			headers: new Headers({'content-type': 'application/json'}),
-			body: JSON.stringify({id: ID, password: password})
+			headers: new Headers({ 'content-type': 'application/json' }),
+			body: JSON.stringify({ id: ID, password: password })
 		}
 		console.log(ID, password)
 		fetch('user/account/signin', options)
-		.then(res => res.text())
-		.then(text => {
-			if (text === 'wrong id') alert('id failed');
-			else if (text === 'wrong password') alert('password failed');
-			else {
-				navigate('/main');
-			}
-		})
+			.then(res => res.text())
+			.then(text => {
+				if (text === 'wrong id') alert('id failed');
+				else if (text === 'wrong password') alert('password failed');
+				else {
+					navigate('/main', { state: { ID: ID } });
+				}
+			})
 	};
 
 	return (

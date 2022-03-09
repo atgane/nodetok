@@ -91,18 +91,18 @@ app.post('/user/:id/rooms', (req, res) => {
 app.post('/user/:id/rooms/:room', (req, res) => {
 	console.log(req.params)
 	database.query('SELECT * FROM rooms WHERE room=?', [req.params.room])
-	.then(rows => {
-		if (rows.length === 0) {
-			res.send('not existing room');
-		}
-		else if (rows[0].id === req.params.id) {
-			res.send('already existing room');
-		}
-		else {
-			database.query('INSERT INTO rooms VALUES (?, ?, ?)', [rows[0].admin_id, req.params.id, rows[0].room]);
-		}
-		res.send('join room');
-	})
+		.then(rows => {
+			if (rows.length === 0) {
+				res.send('not existing room');
+			}
+			else if (rows[0].id === req.params.id) {
+				res.send('already existing room');
+			}
+			else {
+				database.query('INSERT INTO rooms VALUES (?, ?, ?)', [rows[0].admin_id, req.params.id, rows[0].room]);
+			}
+			res.send('join room');
+		})
 });
 
 app.listen(8080);
@@ -112,7 +112,8 @@ const socket = new WebSocket.Server({
 });
 
 socket.on('connection', (ws, req) => {
+	console.log(req.socket.remoteAddress);
 	ws.on('message', (msg) => {
-		console.log('내용:' + msg)
+		console.log('내용:' + msg, socket.clients.size)
 	})
 });

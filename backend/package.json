@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.17.3",
     "mysql": "^2.18.1",
+    "websocket": "^1.0.34",
     "ws": "^8.5.0"
   }
 }
