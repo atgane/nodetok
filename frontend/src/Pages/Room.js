@@ -1,40 +1,47 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import io from 'socket.io-client';
 
 const Room = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const socket = new WebSocket("ws://localhost:8081");
 
   let userID = null;
   let room = null;
 
   try { userID = location.state.ID; room = location.state.room; }
   catch { }
-
-  const [message, setMessage] = useState('')
+  
+  const [log, setLog] = useState([])
+  const [chat, setChat] = useState('')
+  const [socket, setSocket] = useState(null)
 
   useEffect(() => {
     if (!userID) { navigate('/404') }
-    else {
-      socket.onopen = () => socket.send(JSON.stringify({ ID: userID, room: room, message: `${userID} connected` }));
-    }
   }, [])
+  
+  useEffect(() => {
+    const newSocket = io.connect('http://192.168.219.116:8080', { cors: { origin: "*" } });
+    newSocket.on('message', data => console.log(data));
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, [setSocket])
 
   const sendData = () => {
-    console.log('sendData');
-    socket.send(JSON.stringify({ ID: userID, room: room, message: message }));
+    console.log(chat);
+    socket.emit('message', { ID: userID, room: room, chat: chat });
+    setChat('');
   }
 
   return (
     <>
       <h1>nodetok</h1>
       <h3>{room}</h3>
-      <input placeholder='SEND MESSAGE' onChange={e => { setMessage(e.target.value) }}></input>
+      <input placeholder='SEND MESSAGE' value={chat} onChange={e => { setChat(e.target.value) }}></input>
       <button onClick={sendData}>send</button>
+      {/* {log.map((item, index) => <div>{index}</div>)} */}
     </>
   )
-
 }
 
 export default Room

@@ -13,7 +13,7 @@ const Main = () => {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    fetch(`user/${userID}/rooms`)
+    fetch(`http://192.168.219.116:8080/user/${userID}/rooms`)
     .then(res => res.json())
     .then(json => setRooms(json));
   }, [])

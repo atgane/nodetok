@@ -1,6 +1,18 @@
 const express = require('express');
+const http = require('http');
 const WebSocket = require('ws');
 const mysql = require('mysql');
+const cors = require('cors');
+const { Server } = require('socket.io');
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+const server = http.createServer(app);
+const PORT = 8080;
+const io = new Server(server, {cors: {origin: "*", methods: ["GET", "POST"]}});
+
 
 dbConfig = {
 	host: 'localhost',
@@ -32,11 +44,7 @@ class Database {
 		});
 	}
 }
-
 database = new Database(dbConfig);
-
-const app = express();
-app.use(express.json());
 
 app.post('/user/account/signin', (req, res) => {
 	console.log(req.body)
@@ -105,15 +113,13 @@ app.post('/user/:id/rooms/:room', (req, res) => {
 		})
 });
 
-app.listen(8080);
-
-const socket = new WebSocket.Server({
-	port: 8081
+io.sockets.on("connection", socket => {
+    socket.on("message", data => {
+		console.log(data);
+		io.sockets.emit('message', data);
+    });
 });
 
-socket.on('connection', (ws, req) => {
-	console.log(req.socket.remoteAddress);
-	ws.on('message', (msg) => {
-		console.log('내용:' + msg, socket.clients.size)
-	})
+server.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
 });

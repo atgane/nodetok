@@ -15,7 +15,7 @@ const Signup = () => {
 			body: JSON.stringify({ id: ID, password: password })
 		}
 		console.log(ID, password)
-		fetch('user/account/signup', options)
+		fetch('http://192.168.219.116:8080/user/account/signup', options)
 			.then(res => res.text())
 			.then(text => {
 				if (text === 'existing id') alert('id existed');

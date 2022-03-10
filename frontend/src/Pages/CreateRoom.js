@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const CreateRoom = () => {
@@ -20,7 +20,7 @@ const CreateRoom = () => {
       headers: new Headers({ 'content-type': 'application/json' }),
       body: JSON.stringify({ room: roomName })
     }
-    fetch(`/user/${userID}/rooms`, options)
+    fetch(`http://192.168.219.116:8080/user/${userID}/rooms`, options)
       .then(res => res.text())
       .then(text => {
 				if (text === 'existing room') alert('room existed');

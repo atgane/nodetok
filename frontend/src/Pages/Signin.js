@@ -15,7 +15,7 @@ const Signin = () => {
 			body: JSON.stringify({ id: ID, password: password })
 		}
 		console.log(ID, password)
-		fetch('user/account/signin', options)
+		fetch('http://192.168.219.116:8080/user/account/signin', options)
 			.then(res => res.text())
 			.then(text => {
 				if (text === 'wrong id') alert('id failed');
