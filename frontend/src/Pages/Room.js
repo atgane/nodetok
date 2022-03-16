@@ -22,14 +22,18 @@ const Room = () => {
   
   useEffect(() => {
     const newSocket = io.connect('http://192.168.219.116:8080', { cors: { origin: "*" } });
-    newSocket.on('message', data => console.log(data));
+    newSocket.on('message', data => {
+      setLog(prev => [...prev, JSON.stringify(data)]);
+    });
+    newSocket.emit('join_room', room);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket])
 
   const sendData = () => {
-    console.log(chat);
-    socket.emit('message', { ID: userID, room: room, chat: chat });
+    const data = { ID: userID, room: room, chat: chat }
+    socket.emit('message', data);
+    setLog(prev => [...prev, JSON.stringify(data)]);
     setChat('');
   }
 
@@ -39,7 +43,7 @@ const Room = () => {
       <h3>{room}</h3>
       <input placeholder='SEND MESSAGE' value={chat} onChange={e => { setChat(e.target.value) }}></input>
       <button onClick={sendData}>send</button>
-      {/* {log.map((item, index) => <div>{index}</div>)} */}
+      {log.map((item, index) => <div key={index}>{item}</div>)}
     </>
   )
 }

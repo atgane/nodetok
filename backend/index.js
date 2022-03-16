@@ -114,9 +114,12 @@ app.post('/user/:id/rooms/:room', (req, res) => {
 });
 
 io.sockets.on("connection", socket => {
+	socket.on("join_room", room => {
+		socket.join(room);
+	})
+
     socket.on("message", data => {
-		console.log(data);
-		io.sockets.emit('message', data);
+		socket.to(data.room).emit('message', data);
     });
 });
 
