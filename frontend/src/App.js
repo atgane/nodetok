@@ -5,6 +5,7 @@ import Signup from './Pages/Signup';
 import NotFound from './Pages/NotFound'
 import CreateRoom from './Pages/CreateRoom';
 import Room from './Pages/Room';
+import JoinRoom from './Pages/JoinRoom';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path='/main' element={<Main />}></Route>
         <Route path='/room/create' element={<CreateRoom />} />
+        <Route path='/room/join' element={<JoinRoom />} />
         <Route path='/room' element={<Room />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
