@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Titlebar from '../Components/Titlebar';
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Signin = () => {
 
   return (
     <>
-      <h1>nodetok</h1>
+      <Titlebar />
       <input type="text" placeholder='ID' onChange={e => setID(e.target.value)}></input>
       <input type="password" placeholder='PASSWORD' onChange={e => setPassword(e.target.value)}></input>
       <button onClick={signIn}>sign in</button>

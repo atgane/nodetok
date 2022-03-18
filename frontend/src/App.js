@@ -6,6 +6,7 @@ import NotFound from './Pages/NotFound'
 import CreateRoom from './Pages/CreateRoom';
 import Room from './Pages/Room';
 import JoinRoom from './Pages/JoinRoom';
+import './App.css';
 
 function App() {
   return (

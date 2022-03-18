@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
+import Titlebar from '../Components/Titlebar';
+import { Title } from '../Components/Titlebar/headerElements';
 
 const Main = () => {
   const Location = useLocation();
@@ -21,7 +23,7 @@ const Main = () => {
   if (userID)
     return (
       <>
-        <h1>nodetok</h1>
+        <Titlebar />
         <h3>user: {userID}</h3>
         <button onClick={() => { navigate('/room/create', { state: { ID: userID } }) }}>create room</button>
         <button onClick={() => { navigate('/room/join', { state: { ID: userID } }) }}>join room</button>

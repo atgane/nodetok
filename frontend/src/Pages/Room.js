@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import io from 'socket.io-client';
+import Titlebar from '../Components/Titlebar';
 
 const Room = () => {
   const location = useLocation();
@@ -39,7 +40,7 @@ const Room = () => {
 
   return (
     <>
-      <h1>nodetok</h1>
+      <Titlebar />
       <h3>{room}</h3>
       <input placeholder='SEND MESSAGE' value={chat} onChange={e => { setChat(e.target.value) }}></input>
       <button onClick={sendData}>send</button>

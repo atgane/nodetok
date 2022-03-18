@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
+import Titlebar from '../Components/Titlebar';
 
 const CreateRoom = () => {
   const Location = useLocation();
@@ -33,7 +34,7 @@ const CreateRoom = () => {
   if (userID)
     return (
       <>
-        <h1>nodetok</h1>
+        <Titlebar />
         <h3>user: {userID}</h3>
         <input type='text' placeholder='ROOM NAME' onChange={e => { setRoomName(e.target.value) }}></input>
         <button onClick={createRoom}>create room</button>

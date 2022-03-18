@@ -1,9 +1,10 @@
 import React from 'react'
+import Titlebar from '../Components/Titlebar'
 
 const NotFount = () => {
 	return (
 		<>
-			<h1>nodetok</h1>
+			<Titlebar />
 			NotFound
 		</>
 	)
