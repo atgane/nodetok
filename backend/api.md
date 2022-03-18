@@ -14,19 +14,27 @@
 
 # 유저 방 조회
 
-**/user/:id/rooms**
+**get /user/:id/rooms**
 
 * res.json(rows);
 
 # 유저 관리 방 조회
 
-**/user/:id/rooms/admin**
+**get /user/:id/rooms/admin**
 
 * res.json(rows);
 
 # 유저 방 생성
 
-**/user/:id/rooms**
+**post /user/:id/rooms**
 
 * res.send('create room');
 * res.send('existing room');
+
+# 유저 방 참가
+
+**post /user/:id/rooms/:room**
+
+* res.send('not existing room');
+* res.send('already existing room');
+* res.send('join room');
