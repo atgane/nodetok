@@ -22,12 +22,12 @@ const JoinRoom = () => {
     fetch(`http://192.168.219.116:8080/user/${userID}/rooms/${roomName}`, options)
       .then(res => res.text())
       .then(text => {
-				if (text === 'not existing room') alert('room not existed');
+        if (text === 'not existing room') alert('room not existed');
         else if (text === 'already existing room') alert('already existed');
-				else {
+        else {
           navigate('/main', { state: { ID: userID } });
         }
-    })
+      })
   };
 
   if (userID)

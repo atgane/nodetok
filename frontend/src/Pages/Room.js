@@ -11,7 +11,7 @@ const Room = () => {
 
   try { userID = location.state.ID; room = location.state.room; }
   catch { }
-  
+
   const [log, setLog] = useState([])
   const [chat, setChat] = useState('')
   const [socket, setSocket] = useState(null)
@@ -19,7 +19,7 @@ const Room = () => {
   useEffect(() => {
     if (!userID) { navigate('/404') }
   }, [])
-  
+
   useEffect(() => {
     const newSocket = io.connect('http://192.168.219.116:8080', { cors: { origin: "*" } });
     newSocket.on('message', data => {

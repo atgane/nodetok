@@ -23,11 +23,11 @@ const CreateRoom = () => {
     fetch(`http://192.168.219.116:8080/user/${userID}/rooms`, options)
       .then(res => res.text())
       .then(text => {
-				if (text === 'existing room') alert('room existed');
-				else {
+        if (text === 'existing room') alert('room existed');
+        else {
           navigate('/main', { state: { ID: userID } });
         }
-    })
+      })
   };
 
   if (userID)
