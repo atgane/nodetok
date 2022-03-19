@@ -1,0 +1,16 @@
+input[id='cb1'] + label {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border: 2px solid #bcbcbc;
+	cursor: pointer;
+}
+
+
+input[id="cb1"]:checked + label {
+	background-color: #666666;
+}
+
+input[id="cb1"] {
+    display: none;
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Titlebar from '../Components/Titlebar';
+import { Button, TextField } from '@mui/material';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -29,11 +30,11 @@ const Signup = () => {
   return (
     <>
       <Titlebar />
-      <input type="text" placeholder='ID' onChange={e => setID(e.target.value)}></input>
-      <input type="password" placeholder='PASSWORD' onChange={e => setPassword(e.target.value)}></input>
-      <button onClick={signIn}>sign up</button>
-      <p />
-      <Link to='/'>sign in</Link>
+      <br />
+      <TextField id="outlined" label="ID" size="small" onChange={e => setID(e.target.value)} />
+      <TextField type="password" label="password" size="small" onChange={e => setPassword(e.target.value)}></TextField>
+      <Button onClick={signIn} variant="outlined">sign up</Button>
+      <Button component={Link} to="/">sign in</Button>
     </>
   )
 }

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const TitleWrapper = styled.div`
+export const TitleWrapper = styled(Link)`
+  text-decoration: none;
   width: 100%;
   height: 100px;
   display: flex;

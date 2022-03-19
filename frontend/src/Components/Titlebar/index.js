@@ -1,9 +1,9 @@
 import React from 'react';
-import { TitleWrapper, Title } from './headerElements';
+import { TitleWrapper, Title } from './titleElements';
 
 const Titlebar = () => {
   return (
-    <TitleWrapper>
+    <TitleWrapper to='/'>
       <Title>
         nodetok
       </Title>
