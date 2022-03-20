@@ -54,7 +54,7 @@ const Room = () => {
     <>
       <Titlebar />
       <br />
-      <Typography variant="h4">{room}</Typography>
+      <Typography variant="h4">room: {room}</Typography>
       <br />
       <InputField>
         <TextField id="outlined-multiline-static" label="message" size="small" value={chat} multiline rows={4} onChange={e => setChat(e.target.value)} />

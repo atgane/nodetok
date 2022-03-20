@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Typography } from '@mui/material';
 
 export const TitleWrapper = styled(Link)`
   text-decoration: none;
@@ -10,7 +11,7 @@ export const TitleWrapper = styled(Link)`
   align-items: center;
 `
 
-export const Title = styled.div`
+export const Title = styled(Typography)`
   padding-left: 1rem;
   color: #e5e5e5;
   font-size: 1.5rem;

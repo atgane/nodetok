@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import Titlebar from '../Components/Titlebar';
+import { TextField, Button, Typography } from '@mui/material';
 
 const CreateRoom = () => {
   const Location = useLocation();
@@ -35,9 +36,10 @@ const CreateRoom = () => {
     return (
       <>
         <Titlebar />
-        <h3>user: {userID}</h3>
-        <input type='text' placeholder='ROOM NAME' onChange={e => { setRoomName(e.target.value) }}></input>
-        <button onClick={createRoom}>create room</button>
+        <br />
+        <Typography variant="h4" color="initial">user: {userID}</Typography>
+        <TextField id="outlined" label="ROOM NAME" size="small" onChange={e => setRoomName(e.target.value)} />
+        <Button onClick={createRoom}>create room</Button>
       </>
     )
   else return (<>{navigate('/404')}</>)
