@@ -16,7 +16,7 @@ const Main = () => {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    fetch(`http://192.168.219.116:8080/user/${userID}/rooms`)
+    fetch(process.env.REACT_APP_BACKEND_IP + `/user/${userID}/rooms`)
       .then(res => res.json())
       .then(json => setRooms(json));
   }, [])

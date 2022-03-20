@@ -5,3 +5,6 @@
 
 /nodetok.session.sql
 /legacy
+
+/frontend/.env
+/backend/.env

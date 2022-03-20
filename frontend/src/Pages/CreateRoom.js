@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Titlebar from '../Components/Titlebar';
 import { TextField, Button, Typography } from '@mui/material';
 
+
 const CreateRoom = () => {
   const Location = useLocation();
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const CreateRoom = () => {
       headers: new Headers({ 'content-type': 'application/json' }),
       body: JSON.stringify({ room: roomName })
     }
-    fetch(`http://192.168.219.116:8080/user/${userID}/rooms`, options)
+    fetch(process.env.REACT_APP_BACKEND_IP + `/user/${userID}/rooms`, options)
       .then(res => res.text())
       .then(text => {
         if (text === 'existing room') alert('room existed');

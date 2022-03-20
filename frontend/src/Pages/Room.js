@@ -24,7 +24,7 @@ const Room = () => {
   }, [])
 
   useEffect(() => {
-    const newSocket = io.connect('http://192.168.219.116:8080', { cors: { origin: "*" } });
+    const newSocket = io.connect(process.env.REACT_APP_BACKEND_IP, { cors: { origin: "*" } });
     newSocket.on('message', data => {
       setLog(prev => [...prev, {...data, selforigin: 0 }]);
     });
@@ -36,7 +36,7 @@ const Room = () => {
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "start", inline: "start" })
   }
 
   useEffect(() => {

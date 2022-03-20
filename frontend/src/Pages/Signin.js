@@ -16,8 +16,7 @@ const Signin = () => {
       headers: new Headers({ 'content-type': 'application/json' }),
       body: JSON.stringify({ id: ID, password: password })
     }
-    console.log(ID, password)
-    fetch('http://192.168.219.116:8080/user/account/signin', options)
+    fetch(process.env.REACT_APP_BACKEND_IP + '/user/account/signin', options)
       .then(res => res.text())
       .then(text => {
         if (text === 'wrong id') alert('id failed');

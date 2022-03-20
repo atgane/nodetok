@@ -4,21 +4,22 @@ const WebSocket = require('ws');
 const mysql = require('mysql');
 const cors = require('cors');
 const { Server } = require('socket.io');
+require('dotenv').config()
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 const server = http.createServer(app);
-const PORT = 8080;
+const PORT = process.env.BACKEND_IP_PORT;
 const io = new Server(server, {cors: {origin: "*", methods: ["GET", "POST"]}});
 
 
 dbConfig = {
-	host: 'localhost',
-	user: 'root',
-	password: 'qwe123',
-	database: 'nodetok'
+	host: process.env.DATABASE_HOST,
+	user: process.env.DATABASE_USERNAME,
+	password: process.env.DATABASE_PASSWORD,
+	database: process.env.DATABASE_NAME
 }
 
 class Database {
