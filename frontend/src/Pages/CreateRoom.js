@@ -39,7 +39,7 @@ const CreateRoom = () => {
         <Titlebar />
         <br />
         <Typography variant="h4" color="initial">user: {userID}</Typography>
-        <TextField id="outlined" label="ROOM NAME" size="small" onChange={e => setRoomName(e.target.value)} />
+        <TextField variant="outlined" label="ROOM NAME" size="small" onChange={e => setRoomName(e.target.value)} />
         <Button onClick={createRoom}>create room</Button>
       </>
     )

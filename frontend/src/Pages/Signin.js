@@ -31,8 +31,8 @@ const Signin = () => {
     <>
       <Titlebar />
       <br />
-      <TextField id="outlined" label="ID" size="small" onChange={e => setID(e.target.value)} />
-      <TextField id="outlined" label="password" size="small" type="password" onChange={e => setPassword(e.target.value)} />
+      <TextField variant="outlined" label="ID" size="small" onChange={e => setID(e.target.value)} />
+      <TextField variant="outlined" label="password" size="small" type="password" onChange={e => setPassword(e.target.value)} />
       <Button onClick={signIn} variant="outlined">sign in</Button>
       <Button component={Link} to="/signup">sign up</Button>
     </>
