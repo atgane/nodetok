@@ -8,10 +8,7 @@ const Main = () => {
   const Location = useLocation();
   const navigate = useNavigate();
 
-  let userID = null;
-
-  try { userID = Location.state.ID; }
-  catch { }
+  let userID = Location.state?.ID;
 
   const [rooms, setRooms] = useState([]);
 

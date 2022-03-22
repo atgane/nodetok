@@ -9,11 +9,8 @@ const Room = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  let userID = null;
-  let room = null;
-
-  try { userID = location.state.ID; room = location.state.room; }
-  catch { }
+  let userID = location.state?.ID; 
+  let room = location.state?.room;
 
   const [log, setLog] = useState([])
   const [chat, setChat] = useState('')
