@@ -8,7 +8,6 @@ const OauthMain = () => {
   let client_secret = process.env.REACT_APP_CLIENT_SECRET;
   let state = "RAMDOM_STATE";
   let redirectURI = encodeURI(process.env.REACT_APP_CALLBACK_URI);
-  let api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirectURI + '&state=' + state;
 
   const getQueryStringParams = query => {
     return query
@@ -28,7 +27,7 @@ const OauthMain = () => {
   let code = queryObj.code;
   let callback_state = queryObj.state;
 
-  api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
+  let api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
     + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + callback_state;
 
   useEffect(() => {

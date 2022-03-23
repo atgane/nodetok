@@ -4,6 +4,10 @@ const WebSocket = require('ws');
 const mysql = require('mysql');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const axios = require('axios');
+const { stringify } = require('querystring');
+const { client } = require('websocket');
+const qs = require('qs');
 require('dotenv').config()
 
 const app = express();
@@ -113,6 +117,98 @@ app.post('/user/:id/rooms/:room', (req, res) => {
       res.send('join room');
     })
 });
+
+
+app.get('/naver_callback', function (req, res) {
+
+  let client_id = process.env.REACT_APP_NAVER_CLIENT_ID;
+  let client_secret = process.env.REACT_APP_NAVER_CLIENT_SECRET;
+  let redirectURI = encodeURI(process.env.REACT_APP_CALLBACK_URI);
+  let code = req.query.code;
+  let callback_state = req.query.state;
+
+  let api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
+    + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + callback_state;
+  axios({
+    method: 'get',
+    url: api_url,
+    headers: {
+      'X-Naver-Client-Id': client_id,
+      'X-Naver-Client-Secret': client_secret
+    }
+  })
+    .then(ans => {
+
+      console.log(ans.data);
+      res.send(stringify(ans.data));
+      return axios({
+        method: 'get',
+        url: 'https://openapi.naver.com/v1/nid/me',
+        headers: {
+          Authorization: ans.data.token_type + ' ' + ans.data.access_token
+        }
+      })
+    })
+    .then(ans => console.log(ans.data.response.email));
+});
+
+app.get('/naver_callback', function (req, res) {
+
+  let client_id = process.env.REACT_APP_NAVER_CLIENT_ID;
+  let client_secret = process.env.REACT_APP_NAVER_CLIENT_SECRET;
+  let redirectURI = encodeURI(process.env.REACT_APP_CALLBACK_URI);
+  let code = req.query.code;
+  let callback_state = req.query.state;
+
+  let api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
+    + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + callback_state;
+  axios({
+    method: 'get',
+    url: api_url,
+    headers: {
+      'X-Naver-Client-Id': client_id,
+      'X-Naver-Client-Secret': client_secret
+    }
+  })
+    .then(ans => {
+
+      console.log(ans.data);
+      res.send(stringify(ans.data));
+      return axios({
+        method: 'get',
+        url: 'https://openapi.naver.com/v1/nid/me',
+        headers: {
+          Authorization: ans.data.token_type + ' ' + ans.data.access_token
+        }
+      })
+    })
+    .then(ans => console.log(ans.data.response.email));
+});
+
+app.get('/kakao_callback', (req, res) => {
+  //axios>>promise object
+
+  let token;
+
+  token = axios({//token
+    method: 'POST',
+    url: 'https://kauth.kakao.com/oauth/token',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data: qs.stringify({
+      grant_type: 'authorization_code',
+      client_id: process.env.REACT_APP_KAKAO_REST_API_KEY,
+      client_secret: process.env.REACT_APP_KAKAO_CLIENT_SECRET,
+      redirectUri: 'http://192.168.219.116:8080/test',
+      code: req.query.code,
+    })
+  })
+  .then(ans => {
+    console.log(ans.data);
+    res.send(stringify(ans.data))
+  });
+})
 
 io.sockets.on("connection", socket => {
   socket.on("join_room", room => {
