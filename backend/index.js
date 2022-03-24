@@ -138,9 +138,6 @@ app.get('/naver_callback', function (req, res) {
     }
   })
     .then(ans => {
-
-      console.log(ans.data);
-      res.send(stringify(ans.data));
       return axios({
         method: 'get',
         url: 'https://openapi.naver.com/v1/nid/me',
@@ -149,7 +146,7 @@ app.get('/naver_callback', function (req, res) {
         }
       })
     })
-    .then(ans => console.log(ans.data.response.email));
+    .then(ans => res.send(ans.data.response.email));
 });
 
 app.get('/naver_callback', function (req, res) {
@@ -171,9 +168,6 @@ app.get('/naver_callback', function (req, res) {
     }
   })
     .then(ans => {
-
-      console.log(ans.data);
-      res.send(stringify(ans.data));
       return axios({
         method: 'get',
         url: 'https://openapi.naver.com/v1/nid/me',
@@ -182,7 +176,7 @@ app.get('/naver_callback', function (req, res) {
         }
       })
     })
-    .then(ans => console.log(ans.data.response.email));
+    .then(ans => res.send(ans.data.response.email));
 });
 
 app.get('/kakao_callback', (req, res) => {
@@ -200,14 +194,21 @@ app.get('/kakao_callback', (req, res) => {
       grant_type: 'authorization_code',
       client_id: process.env.REACT_APP_KAKAO_REST_API_KEY,
       client_secret: process.env.REACT_APP_KAKAO_CLIENT_SECRET,
-      redirectUri: 'http://192.168.219.116:8080/test',
+      redirectUri: 'http://192.168.219.116:8080/',
       code: req.query.code,
     })
   })
   .then(ans => {
-    console.log(ans.data);
-    res.send(stringify(ans.data))
-  });
+    return axios({
+      method: 'GET',
+      url: 'https://kapi.kakao.com//v2/user/me',
+      headers: {
+        'Authorization': `Bearer ${ans.data.access_token}`,
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      }
+    })
+  })
+  .then(ans => res.send(ans.data.kakao_account.email));
 })
 
 io.sockets.on("connection", socket => {
