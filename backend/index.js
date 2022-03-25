@@ -200,7 +200,14 @@ app.get('/kakao_callback', (req, res) => {
         }
       })
     })
-    .then(ans => res.send(ans.data.kakao_account.email));
+    .then(ans => {
+      email = ans.data.email;
+
+      res.cookie('key', {
+        access_token: access_token,
+        email: email
+      }).redirect(process.env.FRONTEND_IP + '/oauth_main');
+    });
 })
 
 io.sockets.on("connection", socket => {
