@@ -8,6 +8,7 @@ const axios = require('axios');
 const { stringify } = require('querystring');
 const { client } = require('websocket');
 const qs = require('qs');
+const { access } = require('fs');
 require('dotenv').config()
 
 const app = express();
@@ -129,6 +130,12 @@ app.get('/naver_callback', function (req, res) {
 
   let api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
     + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + callback_state;
+
+  let access_token;
+  let refresh_token;
+  let email;
+  let domain = 'naver';
+
   axios({
     method: 'get',
     url: api_url,
@@ -138,53 +145,35 @@ app.get('/naver_callback', function (req, res) {
     }
   })
     .then(ans => {
+      access_token = ans.data.access_token;
+      refresh_token = ans.data.refresh_token;
+
       return axios({
         method: 'get',
         url: 'https://openapi.naver.com/v1/nid/me',
         headers: {
-          Authorization: ans.data.token_type + ' ' + ans.data.access_token
+          Authorization: ans.data.token_type + ' ' + access_token
         }
       })
     })
-    .then(ans => res.send(ans.data.response.email));
-});
-
-app.get('/naver_callback', function (req, res) {
-
-  let client_id = process.env.REACT_APP_NAVER_CLIENT_ID;
-  let client_secret = process.env.REACT_APP_NAVER_CLIENT_SECRET;
-  let redirectURI = encodeURI(process.env.REACT_APP_CALLBACK_URI);
-  let code = req.query.code;
-  let callback_state = req.query.state;
-
-  let api_url = 'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id='
-    + client_id + '&client_secret=' + client_secret + '&redirect_uri=' + redirectURI + '&code=' + code + '&state=' + callback_state;
-  axios({
-    method: 'get',
-    url: api_url,
-    headers: {
-      'X-Naver-Client-Id': client_id,
-      'X-Naver-Client-Secret': client_secret
-    }
-  })
     .then(ans => {
-      return axios({
-        method: 'get',
-        url: 'https://openapi.naver.com/v1/nid/me',
-        headers: {
-          Authorization: ans.data.token_type + ' ' + ans.data.access_token
-        }
-      })
-    })
-    .then(ans => res.send(ans.data.response.email));
+      email = ans.data.response.email;
+
+      res.cookie('key', {
+        access_token: access_token,
+        email: email
+      }).redirect(process.env.FRONTEND_IP + '/oauth_main');
+    });
 });
 
 app.get('/kakao_callback', (req, res) => {
-  //axios>>promise object
 
-  let token;
+  let access_token;
+  let refresh_token;
+  let email;
+  let domain = 'kakao';
 
-  token = axios({//token
+  axios({
     method: 'POST',
     url: 'https://kauth.kakao.com/oauth/token',
     headers: {
@@ -194,21 +183,24 @@ app.get('/kakao_callback', (req, res) => {
       grant_type: 'authorization_code',
       client_id: process.env.REACT_APP_KAKAO_REST_API_KEY,
       client_secret: process.env.REACT_APP_KAKAO_CLIENT_SECRET,
-      redirectUri: 'http://192.168.219.116:8080/',
+      redirectUri: '',
       code: req.query.code,
     })
   })
-  .then(ans => {
-    return axios({
-      method: 'GET',
-      url: 'https://kapi.kakao.com//v2/user/me',
-      headers: {
-        'Authorization': `Bearer ${ans.data.access_token}`,
-        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      }
+    .then(ans => {
+      access_token = ans.data.access_token;
+      refresh_token = ans.data.refresh_token;
+
+      return axios({
+        method: 'GET',
+        url: 'https://kapi.kakao.com//v2/user/me',
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        }
+      })
     })
-  })
-  .then(ans => res.send(ans.data.kakao_account.email));
+    .then(ans => res.send(ans.data.kakao_account.email));
 })
 
 io.sockets.on("connection", socket => {
