@@ -48,3 +48,7 @@ react, express, mysql, socketio를 이용한 채팅방 시스템 구현하기
 
 > ### 회고
 > - 어떻게 클라이언트 측에서 서로를 구별할 수 있을까?
+
+## 2022-03-26
+
+- access token을 httponly쿠키로 전송 & 백엔드에서 수집 확인

@@ -9,15 +9,20 @@ const { stringify } = require('querystring');
 const { client } = require('websocket');
 const qs = require('qs');
 const { access } = require('fs');
+const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_IP,
+  credentials: true
+}));
 
 const server = http.createServer(app);
 const PORT = process.env.BACKEND_IP_PORT;
-const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
+const io = new Server(server, { cors: { origin: "http://192.168.219.116:3000", methods: ["GET", "POST"] } });
 
 
 dbConfig = {
@@ -119,6 +124,10 @@ app.post('/user/:id/rooms/:room', (req, res) => {
     })
 });
 
+app.get('/oauth/user/info', (req, res) => {
+  console.log(req.cookies, req.headers);
+  res.json({});
+})
 
 app.get('/naver_callback', function (req, res) {
 
