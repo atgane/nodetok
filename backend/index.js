@@ -9,11 +9,9 @@ const { stringify } = require('querystring');
 const { client } = require('websocket');
 const qs = require('qs');
 const { access } = require('fs');
-const cookieParser = require('cookie-parser');
 require('dotenv').config()
 
 const app = express();
-app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: process.env.FRONTEND_IP,
@@ -125,8 +123,54 @@ app.post('/user/:id/rooms/:room', (req, res) => {
 });
 
 app.get('/oauth/user/info', (req, res) => {
-  console.log(req.cookies, req.headers);
-  res.json({});
+  
+  const parseCookies = ( cookie = '' ) => {
+    return cookie
+        .split(';')
+        .map( v => v.split('=') )
+        .map( ([k, ...vs]) => [k, vs.join('=')] )
+        .reduce( (acc, [k,v]) => {
+            acc[k.trim()] = decodeURIComponent(v);
+            return acc;
+        }, {});
+  }
+
+  let token = parseCookies(req.headers.cookie).key;
+  console.log(token);
+
+  let naver_data;
+  let kakao_data;
+
+  let get_data = async () => {
+    // naver
+    await axios({
+      method: 'get',
+      url: 'https://openapi.naver.com/v1/nid/me',
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }).then(ans => naver_data = ans.data, e => naver_data = undefined);
+
+    // kakao
+    await axios({
+      method: 'get',
+      url: 'https://kapi.kakao.com/v2/user/me',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      }
+    }).then(ans => kakao_data = ans.data, e => kakao_data = undefined);
+    
+    if (naver_data) email = naver_data.response.email;
+    else if (kakao_data) email = kakao_data.kakao_account.email;
+    else email = undefined;
+
+    console.log(email);
+    res.send({
+      email: email
+    });
+  }
+  get_data();
 })
 
 app.get('/naver_callback', function (req, res) {

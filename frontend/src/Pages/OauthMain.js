@@ -7,6 +7,7 @@ const OauthMain = () => {
     fetch(process.env.REACT_APP_BACKEND_IP + '/oauth/user/info', {
       credentials: "include"
     })
+    .then(ans => ans.json())
     .then(ans => console.log(ans))
   }, [])
 
