@@ -3,7 +3,6 @@ import Titlebar from '../Components/Titlebar'
 
 const OauthMain = () => {
 
-
   return (
     <>
       <Titlebar />

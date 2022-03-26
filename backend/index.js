@@ -159,9 +159,8 @@ app.get('/naver_callback', function (req, res) {
     .then(ans => {
       email = ans.data.response.email;
 
-      res.cookie('key', {
-        access_token: access_token,
-        email: email
+      res.cookie('key', access_token, {
+        httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
     });
 });
@@ -203,9 +202,8 @@ app.get('/kakao_callback', (req, res) => {
     .then(ans => {
       email = ans.data.email;
 
-      res.cookie('key', {
-        access_token: access_token,
-        email: email
+      res.cookie('key', access_token, {
+        httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
     });
 })
