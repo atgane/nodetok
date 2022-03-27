@@ -9,6 +9,7 @@ import JoinRoom from './Pages/JoinRoom';
 import './App.css';
 import Oauth from './Pages/Oauth';
 import OauthMain from './Pages/OauthMain';
+import SetName from './Pages/SetName';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route path='/' element={<Signin />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/oauth' element={<Oauth />} />
-        <Route path='/oauth_main' element={<OauthMain />}/>
+        <Route path='/oauth_main' element={<OauthMain />} />
+        <Route path='/set_name' element={<SetName />} />
         <Route path='/main' element={<Main />}></Route>
         <Route path='/room/create' element={<CreateRoom />} />
         <Route path='/room/join' element={<JoinRoom />} />

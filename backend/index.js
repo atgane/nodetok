@@ -136,7 +136,6 @@ app.get('/oauth/user/info', (req, res) => {
   }
 
   let token = parseCookies(req.headers.cookie).key;
-  console.log(token);
 
   let naver_data;
   let kakao_data;
@@ -165,9 +164,9 @@ app.get('/oauth/user/info', (req, res) => {
     else if (kakao_data) email = kakao_data.kakao_account.email;
     else email = undefined;
 
-    console.log(email);
-    res.send({
-      email: email
+    res.json({
+      email: email,
+      ID: undefined
     });
   }
   get_data();
@@ -211,7 +210,14 @@ app.get('/naver_callback', function (req, res) {
     })
     .then(ans => {
       email = ans.data.response.email;
-
+      return database.query('SELECT * FROM users_info WHERE email=? AND user_domain=?', [email, domain]);
+    })
+    .then(ans => {
+      if (ans.length === 0) {
+        database.query('INSERT INTO users_info(user_domain, email, refresh_token) VALUES(?, ?, ?)', ['naver', email, refresh_token]);
+      }
+    })
+    .then(ans => {
       res.cookie('key', access_token, {
         httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
@@ -253,8 +259,15 @@ app.get('/kakao_callback', (req, res) => {
       })
     })
     .then(ans => {
-      email = ans.data.email;
-
+      email = ans.data.kakao_account.email;
+      return database.query('SELECT * FROM users_info WHERE email=? AND user_domain=?', [email, domain]);
+    })
+    .then(ans => {
+      if (ans.length === 0) {
+        database.query('INSERT INTO users_info(user_domain, email, refresh_token) VALUES(?, ?, ?)', ['kakao', email, refresh_token]);
+      }
+    })
+    .then(ans => {
       res.cookie('key', access_token, {
         httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');

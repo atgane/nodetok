@@ -38,3 +38,12 @@
 * res.send('not existing room');
 * res.send('already existing room');
 * res.send('join room');
+
+# Oauth 유저 이메일 조회
+
+**get /oauth/user/info**
+
+* res.json({
+      email: email,
+      ID: undefined
+    }
