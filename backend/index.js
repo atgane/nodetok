@@ -9,6 +9,7 @@ const { stringify } = require('querystring');
 const { client } = require('websocket');
 const qs = require('qs');
 const { access } = require('fs');
+const { parseCookies } = require('./parseCookies');
 require('dotenv').config()
 
 const app = express();
@@ -123,24 +124,15 @@ app.post('/user/:id/rooms/:room', (req, res) => {
 });
 
 app.get('/oauth/user/info', (req, res) => {
-  
-  const parseCookies = ( cookie = '' ) => {
-    return cookie
-        .split(';')
-        .map( v => v.split('=') )
-        .map( ([k, ...vs]) => [k, vs.join('=')] )
-        .reduce( (acc, [k,v]) => {
-            acc[k.trim()] = decodeURIComponent(v);
-            return acc;
-        }, {});
-  }
-
   let token = parseCookies(req.headers.cookie).key;
 
-  let naver_data;
-  let kakao_data;
-
   let get_data = async () => {
+    let naver_data;
+    let kakao_data;
+
+    let email;
+    let domain;
+
     // naver
     await axios({
       method: 'get',
@@ -160,17 +152,41 @@ app.get('/oauth/user/info', (req, res) => {
       }
     }).then(ans => kakao_data = ans.data, e => kakao_data = undefined);
     
-    if (naver_data) email = naver_data.response.email;
-    else if (kakao_data) email = kakao_data.kakao_account.email;
-    else email = undefined;
+    if (naver_data) {
+      email = naver_data.response.email;
+      domain = 'naver';
+    }
+    else if (kakao_data) {
+      email = kakao_data.kakao_account.email;
+      domain = 'kakao';
+    }
+    else {
+      email = undefined;
+      domain = undefined;
+    }
 
-    res.json({
-      email: email,
-      ID: undefined
-    });
+
+    if (email) {
+      database.query('SELECT user_id, id FROM users_info WHERE email=? and domain=?', [email, domain]).then(ans => {
+        res.json({
+          user_id: ans[0].user_id,
+          email: email,
+          domain: domain,
+          ID: ans[0].id
+        });
+      });
+    }
   }
   get_data();
 })
+
+app.put('/oauth/user/info/id', (req, res) => {
+  let token = parseCookies(req.headers.cookie).key;
+  let ID = req.body.id;
+  let user_ID = req.body.user_id;
+  database.query('UPDATE users_info SET id=? WHERE user_id=?', [ID, user_ID]);
+});
+
 
 app.get('/naver_callback', function (req, res) {
 
@@ -210,11 +226,11 @@ app.get('/naver_callback', function (req, res) {
     })
     .then(ans => {
       email = ans.data.response.email;
-      return database.query('SELECT * FROM users_info WHERE email=? AND user_domain=?', [email, domain]);
+      return database.query('SELECT * FROM users_info WHERE email=? AND domain=?', [email, domain]);
     })
     .then(ans => {
       if (ans.length === 0) {
-        database.query('INSERT INTO users_info(user_domain, email, refresh_token) VALUES(?, ?, ?)', ['naver', email, refresh_token]);
+        database.query('INSERT INTO users_info(domain, email, refresh_token) VALUES(?, ?, ?)', ['naver', email, refresh_token]);
       }
     })
     .then(ans => {
@@ -260,11 +276,11 @@ app.get('/kakao_callback', (req, res) => {
     })
     .then(ans => {
       email = ans.data.kakao_account.email;
-      return database.query('SELECT * FROM users_info WHERE email=? AND user_domain=?', [email, domain]);
+      return database.query('SELECT * FROM users_info WHERE email=? AND domain=?', [email, domain]);
     })
     .then(ans => {
       if (ans.length === 0) {
-        database.query('INSERT INTO users_info(user_domain, email, refresh_token) VALUES(?, ?, ?)', ['kakao', email, refresh_token]);
+        database.query('INSERT INTO users_info(domain, email, refresh_token) VALUES(?, ?, ?)', ['kakao', email, refresh_token]);
       }
     })
     .then(ans => {

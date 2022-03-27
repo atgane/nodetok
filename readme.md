@@ -53,3 +53,8 @@ react, express, mysql, socketio를 이용한 채팅방 시스템 구현하기
 
 - access token을 httponly쿠키로 전송 & 백엔드에서 수집 확인
 - access token을 이용하여 사용자 정보 확인
+
+## 2022-03-27
+
+- users_info 테이블로 유저 정보 관리
+- 닉네임 설정 창 생성

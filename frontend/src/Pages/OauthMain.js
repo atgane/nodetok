@@ -12,10 +12,12 @@ const OauthMain = () => {
     })
     .then(ans => ans.json())
     .then(ans => {
+      console.log(ans);
+
       if (!ans.email) {
         navigate('/oauth_main');
       }
-      else if (!ans.name) {
+      else if (!ans.ID) {
         navigate('/set_name');
       }
       else setUserData(ans);

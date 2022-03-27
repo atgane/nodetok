@@ -44,6 +44,6 @@
 **get /oauth/user/info**
 
 * res.json({
-      email: email,
-      ID: undefined
-    }
+          email: email,
+          ID: ans[0].id
+        });
