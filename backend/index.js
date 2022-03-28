@@ -99,7 +99,7 @@ app.post('/user/:id/rooms', (req, res) => {
   database.query('SELECT * FROM rooms WHERE room=?', [req.body.room])
     .then(rows => {
       if (rows.length === 0) {
-        database.query('INSERT INTO rooms VALUES (?, ?, ?)', [req.params.id, req.params.id, req.body.room]);
+        database.query('INSERT INTO rooms(admin_id, id, room) VALUES (?, ?, ?)', [req.params.id, req.params.id, req.body.room]);
         res.send('create room');
       }
       else res.send('existing room');
