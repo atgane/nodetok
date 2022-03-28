@@ -58,3 +58,7 @@ react, express, mysql, socketio를 이용한 채팅방 시스템 구현하기
 
 - users_info 테이블로 유저 정보 관리
 - 닉네임 설정 창 생성
+
+## 2022-03-28
+
+- refresh token으로 토큰 갱신

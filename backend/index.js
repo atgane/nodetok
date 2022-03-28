@@ -167,7 +167,23 @@ app.get('/oauth/user/info', (req, res) => {
 
 
     if (email) {
-      database.query('SELECT user_id, id FROM users_info WHERE email=? and domain=?', [email, domain]).then(ans => {
+      database.query('SELECT user_id, id, refresh_token FROM users_info WHERE email=? and domain=?', [email, domain]).then(ans => {
+        if (domain === 'naver') axios({
+          method: 'get',
+          url: `https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&client_secret=${process.env.REACT_APP_NAVER_CLIENT_SECRET}&refresh_token=${ans[0].refresh_token}`
+        })
+        else if (domain === 'kakao') axios({
+          method: 'post',
+          url: "https://kauth.kakao.com/oauth/token",
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+          },
+          data: qs.stringify({
+            grant_type: 'refresh_token',
+            client_id: process.env.REACT_APP_KAKAO_REST_API_KEY,
+            refresh_token: ans[0].refresh_token
+          })
+        })
         res.json({
           user_id: ans[0].user_id,
           email: email,
