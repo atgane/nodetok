@@ -117,7 +117,7 @@ app.post('/user/:id/rooms/:room', (req, res) => {
         res.send('already existing room');
       }
       else {
-        database.query('INSERT INTO rooms VALUES (?, ?, ?)', [rows[0].admin_id, req.params.id, rows[0].room]);
+        database.query('INSERT INTO rooms(admin_id, id, room) VALUES (?, ?, ?)', [rows[0].admin_id, req.params.id, rows[0].room]);
       }
       res.send('join room');
     })
