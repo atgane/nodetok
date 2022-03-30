@@ -24,7 +24,7 @@ const JoinRoom = () => {
         if (text === 'not existing room') alert('room not existed');
         else if (text === 'already existing room') alert('already existed');
         else {
-          navigate('/main', { state: { ID: userID } });
+          navigate('/oauth_main');
         }
       })
   };

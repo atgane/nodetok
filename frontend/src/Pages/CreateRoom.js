@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
+import useUserInfo from '../hooks/useUserInfo';
 import Titlebar from '../Components/Titlebar';
 import { TextField, Button, Typography } from '@mui/material';
 
 
 const CreateRoom = () => {
-  const Location = useLocation();
   const navigate = useNavigate();
-
-  let userID = Location.state?.ID;
-
+  const [userData, setUserData] = useState({})
+  const [userID, setUserID] = useState('')
   const [roomName, setRoomName] = useState('')
+
+  useUserInfo(setUserData, () => {
+    if (userData) {
+      setUserID(userData.ID);
+    }
+  });
 
   const createRoom = () => {
     console.log(roomName)
@@ -25,7 +30,7 @@ const CreateRoom = () => {
       .then(text => {
         if (text === 'existing room') alert('room existed');
         else {
-          navigate('/main', { state: { ID: userID } });
+          navigate('/oauth_main');
         }
       })
   };

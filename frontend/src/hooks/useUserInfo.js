@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const useUserInfo = (setUserData) => {
+const useUserInfo = (setUserData, callback, props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -10,13 +10,19 @@ const useUserInfo = (setUserData) => {
     })
     .then(ans => ans.json())
     .then(ans => {
+      console.log('ans', ans)
       if (!ans.email) {
-        navigate('/oauth_main');
+        navigate('/oauth');
       }
       else if (!ans.ID) {
         navigate('/set_name');
       }
-      else setUserData(ans);
+      else {
+        let set = () => {return new Promise((resolve, reject) => {
+          resolve(setUserData(ans));
+        })}
+        set().then(ans => callback(props));
+      }
     })
   }, [])
 }
