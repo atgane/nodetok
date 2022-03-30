@@ -10,7 +10,6 @@ const useUserInfo = (setUserData) => {
     })
     .then(ans => ans.json())
     .then(ans => {
-      console.log('ans', ans)
       if (!ans.email) {
         navigate('/oauth');
       }
