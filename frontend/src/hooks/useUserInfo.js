@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const useUserInfo = (setUserData, callback, props) => {
+const useUserInfo = (setUserData) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,10 +18,7 @@ const useUserInfo = (setUserData, callback, props) => {
         navigate('/set_name');
       }
       else {
-        let set = () => {return new Promise((resolve, reject) => {
-          resolve(setUserData(ans));
-        })}
-        set().then(ans => callback(props));
+        setUserData(ans);
       }
     })
   }, [])

@@ -3,30 +3,15 @@ import { useNavigate, Link } from 'react-router-dom'
 import Titlebar from '../Components/Titlebar';
 import { Button, Typography, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
 import styled from 'styled-components';
+import useUserInfo from '../hooks/useUserInfo';
 
 const OauthMain = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({})
   const [rooms, setRooms] = useState([])
 
-  useEffect(() => {
-    console.log('effect')
-    fetch(process.env.REACT_APP_BACKEND_IP + '/oauth/user/info', {
-      credentials: "include"
-    })
-      .then(ans => ans.json())
-      .then(ans => {
-        console.log('ans', ans)
-        if (!ans.email) {
-          navigate('/oauth');
-        }
-        else if (!ans.ID) {
-          navigate('/set_name');
-        }
-        else {setUserData(ans)}
-      })
-  }, [])
-
+  useUserInfo(setUserData);
+  
   useEffect(() => {
     if (userData) fetch(process.env.REACT_APP_BACKEND_IP + `/user/${userData.ID}/rooms`)
     .then(res => res.json())
