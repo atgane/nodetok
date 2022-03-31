@@ -203,6 +203,7 @@ app.get('/naver_callback', function (req, res) {
 
   let access_token;
   let refresh_token;
+  let timeout;
   let email;
   let domain = 'naver';
 
@@ -217,6 +218,7 @@ app.get('/naver_callback', function (req, res) {
     .then(ans => {
       access_token = ans.data.access_token;
       refresh_token = ans.data.refresh_token;
+      timeout = ans.data.expires_in;
 
       return axios({
         method: 'get',
@@ -238,6 +240,10 @@ app.get('/naver_callback', function (req, res) {
     .then(ans => {
       res.cookie('key', access_token, {
         httpOnly: true
+      }).cookie('timeout', timeout, {
+        httpOnly: true
+      }).cookie('time', new Date(), {
+        httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
     });
 });
@@ -246,6 +252,7 @@ app.get('/kakao_callback', (req, res) => {
 
   let access_token;
   let refresh_token;
+  let timeout;
   let email;
   let domain = 'kakao';
 
@@ -266,6 +273,7 @@ app.get('/kakao_callback', (req, res) => {
     .then(ans => {
       access_token = ans.data.access_token;
       refresh_token = ans.data.refresh_token;
+      timeout = ans.data.expires_in;
 
       return axios({
         method: 'GET',
@@ -287,6 +295,10 @@ app.get('/kakao_callback', (req, res) => {
     })
     .then(ans => {
       res.cookie('key', access_token, {
+        httpOnly: true
+      }).cookie('timeout', timeout, {
+        httpOnly: true
+      }).cookie('time', new Date(), {
         httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
     });
