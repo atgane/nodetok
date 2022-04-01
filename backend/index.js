@@ -107,7 +107,6 @@ app.post('/user/:id/rooms', (req, res) => {
 })
 
 app.post('/user/:id/rooms/:room', (req, res) => {
-  console.log(req.params)
   database.query('SELECT * FROM rooms WHERE room=?', [req.params.room])
     .then(rows => {
       if (rows.length === 0) {
@@ -124,7 +123,12 @@ app.post('/user/:id/rooms/:room', (req, res) => {
 });
 
 app.get('/oauth/user/info', (req, res) => {
-  let token = parseCookies(req.headers.cookie).key;
+  let cookieData = parseCookies(req.headers.cookie);
+  let token = cookieData.key;
+  let time = Date.parse(cookieData.time);
+  let timeout = cookieData.timeout;
+
+
 
   let get_data = async () => {
     let naver_data;
@@ -140,10 +144,7 @@ app.get('/oauth/user/info', (req, res) => {
       headers: {
         Authorization: 'Bearer ' + token
       }
-    }).then(ans => naver_data = ans.data, e => {
-      naver_data = undefined
-      console.log(e)
-    });
+    }).then(ans => naver_data = ans.data, e => naver_data = undefined);
 
     // kakao
     await axios({
@@ -169,15 +170,70 @@ app.get('/oauth/user/info', (req, res) => {
     }
 
     if (email) {
-      database.query('SELECT user_id, id, refresh_token FROM users_info WHERE email=? and domain=?', [email, domain]).then(ans => {
-        res.json({
+      database.query('SELECT user_id, id, refresh_token FROM users_info WHERE email=? and domain=?', [email, domain])
+      .then(ans => {
+        if (timeout * 900 < Date.parse(new Date()) - time && Date.parse(new Date()) - time < timeout * 1000) {
+          if (domain === 'naver') {
+            axios({
+              method: 'get',
+              url: `https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&client_secret=${process.env.REACT_APP_NAVER_CLIENT_SECRET}&refresh_token=${ans[0].refresh_token}`
+            })
+            .then(ref_ans => {
+              res.cookie('key', ref_ans.data.access_token, {
+                httpOnly: true
+              }).cookie('timeout', ref_ans.data.expires_in, {
+                httpOnly: true
+              }).cookie('time', Date(), {
+                httpOnly: true
+              }).json({
+                user_id: ans[0].user_id,
+                email: email,
+                domain: domain,
+                ID: ans[0].id
+              });
+            })
+          }
+          else if (domain === 'kakao') {
+            axios({
+              method: 'POST',
+              url: 'https://kauth.kakao.com/oauth/token',
+              headers: {
+                'content-type': 'application/x-www-form-urlencoded'
+              },
+              data: qs.stringify({
+                grant_type: 'refresh_token',
+                client_id: process.env.REACT_APP_KAKAO_REST_API_KEY,
+                refresh_token: ans[0].refresh_token,
+                client_secret: process.env.REACT_APP_KAKAO_CLIENT_SECRET
+              })
+            })
+            .then(ref_ans => {
+              res.cookie('key', ref_ans.data.access_token, {
+                httpOnly: true
+              }).cookie('timeout', ref_ans.data.expires_in, {
+                httpOnly: true
+              }).cookie('time', Date(), {
+                httpOnly: true
+              }).json({
+                user_id: ans[0].user_id,
+                email: email,
+                domain: domain,
+                ID: ans[0].id
+              });
+            })
+          }
+        }
+        else res.json({
           user_id: ans[0].user_id,
           email: email,
           domain: domain,
           ID: ans[0].id
         });
       });
-    } else res.json({});
+    } else {
+      console.log('email undefined');
+      res.json({});
+    }
   }
   get_data();
 })
@@ -242,7 +298,7 @@ app.get('/naver_callback', function (req, res) {
         httpOnly: true
       }).cookie('timeout', timeout, {
         httpOnly: true
-      }).cookie('time', new Date(), {
+      }).cookie('time', Date(), {
         httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
     });
@@ -298,7 +354,7 @@ app.get('/kakao_callback', (req, res) => {
         httpOnly: true
       }).cookie('timeout', timeout, {
         httpOnly: true
-      }).cookie('time', new Date(), {
+      }).cookie('time', Date(), {
         httpOnly: true
       }).redirect(process.env.FRONTEND_IP + '/oauth_main');
     });
