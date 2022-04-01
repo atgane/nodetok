@@ -56,31 +56,6 @@ class Database {
 }
 database = new Database(dbConfig);
 
-app.post('/user/account/signin', (req, res) => {
-  console.log(req.body)
-  database.query('SELECT * FROM user WHERE id=?', [req.body.id])
-    .then(rows => {
-      console.log(rows)
-      if (rows.length === 0) res.send('wrong id');
-      else if (rows[0].password === req.body.password) res.send('login complete');
-      else res.send('wrong password');
-    });
-});
-
-app.post('/user/account/signup', (req, res) => {
-  database.query('SELECT id FROM user WHERE id=?', [req.body.id])
-    .then(rows => {
-      console.log(rows)
-      if (rows.length === 0) {
-        database.query('INSERT INTO user VALUES (?, ?)', [req.body.id, req.body.password]);
-        res.send('create id');
-      }
-      else {
-        res.send('existing id');
-      }
-    });
-});
-
 app.get('/user/:id/rooms', (req, res) => {
   database.query('SELECT * FROM rooms WHERE id=?', [req.params.id])
     .then(rows => {
